@@ -1,1 +1,109 @@
-PARTICIPANTS: use this file for creating the class diagram in mastery task 01
+@startuml
+
+
+class AlbumTrack {
+    - @DynamoDBHashKey asin : String
+    - @DynamoDBRangeKey trackNumber : Integer @DynamoDBRangeKey
+    - albumName : String
+    - songTitle : String
+}
+
+
+class Playlist{
+     - @DynamoDBHashKey id : String
+        - name : String
+        - customerId : String
+        - songCount : Integer
+        - tags : Set<String>
+        - songList : List<AlbumTrack>
+}
+
+interface RequestHandler<v, k> {
+ handleRequest(v, context : Context) : k
+}
+class AddSongToPlaylistActivity {
+- <<final>> log: Logger
+    - <<final>>  playlistDao : PlaylistDao
+    - <<final>>  albumTrackDao : AlbumTrackDao
+    +  handleRequest(addSongToPlaylistRequest :AddSongToPlaylistRequest, context : Context) :AddSongToPlaylistResult
+}
+
+class CreatePlaylistActivity {
+- <<final>>  log : Logger
+    - final  playlistDao : PlaylistDao
+    +  handleRequest(createPlaylistRequest :CreatePlaylistRequest,
+     context : Context) :CreatePlaylistResult
+
+}
+
+class GetPlaylistActivity {
+ - <<final>>  log : Logger
+    - <<final>>  playlistDao : PlaylistDao
+     +  handleRequest(getPlaylistRequest :GetPlaylistRequest,
+         context : Context) : GetPlaylistResult
+
+
+}
+class GetPlaylistSongsActivity {
+- <<final>>  log : Logger
+    - <<final>>  playlistDao : PlaylistDao
+     +  handleRequest(getPlaylistSongsRequest :GetPlaylistSongsRequest,
+             context : Context) :GetPlaylistSongsResult
+
+
+}
+
+class UpdatePlaylistActivity{
+- <<final>>  log : Logger
+    - <<final>>  playlistDao : PlaylistDao
+
+    +  handleRequest(updatePlaylistRequest :UpdatePlaylistRequest,
+                 context : Context) :UpdatePlaylistResult
+}
+
+
+
+class AlbumTrackDao {
+- <<final>>  dynamoDbMapper : DynamoDBMapper
+}
+
+class PlaylistDao {
+- <<final>>  dynamoDbMapper : DynamoDBMapper
++  getPlaylist(id : String) :  Playlist
+
+}
+
+class DynamoDBMapper {}
+class AlbumTrackNotFoundException {
+}
+class InvalidAttributeValueException{
+
+}
+class PlaylistNotFoundException{
+}
+class RuntimeException{}
+
+AddSongToPlaylistActivity o-- PlaylistDao
+AddSongToPlaylistActivity o-- AlbumTrackDao
+AddSongToPlaylistActivity .|> RequestHandler
+CreatePlaylistActivity .|> RequestHandler
+GetPlaylistActivity ..|> RequestHandler
+GetPlaylistSongsActivity ..|> RequestHandler
+PlaylistDao o-- DynamoDBMapper
+UpdatePlaylistActivity ...|> RequestHandler
+
+CreatePlaylistActivity o-- PlaylistDao
+GetPlaylistActivity o- PlaylistDao
+GetPlaylistSongsActivity o- PlaylistDao
+UpdatePlaylistActivity o-- PlaylistDao
+AlbumTrackDao o-- DynamoDBMapper
+AlbumTrackNotFoundException -|> RuntimeException
+InvalidAttributeValueException --|> RuntimeException
+PlaylistNotFoundException --|> RuntimeException
+PlaylistDao *- PlaylistNotFoundException
+AlbumTrackDao *- AlbumTrackNotFoundException
+
+Playlist o- AlbumTrack
+
+
+@enduml

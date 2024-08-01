@@ -8,14 +8,56 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTypeConverted;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Represents a record in the playlists table.
  */
 @DynamoDBTable(tableName = "playlists")
 public class Playlist {
+
+    private String name;
+    private Integer songCount;
+    private Set<String> tags;
+    private String customerId;
     private String id;
     private List<AlbumTrack> songList;
+
+    @DynamoDBAttribute(attributeName = "")
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @DynamoDBAttribute(attributeName = "")
+    public Integer getSongCount() {
+        return songCount;
+    }
+
+    public void setSongCount(Integer songCount) {
+        this.songCount = songCount;
+    }
+
+    @DynamoDBAttribute(attributeName = "")
+    public Set<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<String> tags) {
+        this.tags = tags;
+    }
+
+    @DynamoDBAttribute(attributeName = "")
+    public String getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
+    }
 
     @DynamoDBHashKey(attributeName = "id")
     public String getId() {
