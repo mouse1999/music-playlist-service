@@ -16,6 +16,7 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.inject.Inject;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -34,6 +35,7 @@ public class UpdatePlaylistActivity implements RequestHandler<UpdatePlaylistRequ
      *
      * @param playlistDao PlaylistDao to access the playlist table.
      */
+    @Inject
     public UpdatePlaylistActivity(PlaylistDao playlistDao) {
         this.playlistDao = playlistDao;
     }
@@ -65,8 +67,8 @@ public class UpdatePlaylistActivity implements RequestHandler<UpdatePlaylistRequ
             throw new PlaylistNotFoundException(String.format("playlist not found for this id %s",updatePlaylistRequest.getId()));
         }
 
-        if (MusicPlaylistServiceUtils.isValidString(updatePlaylistRequest.getName()
-        ) == false && !(!MusicPlaylistServiceUtils.isValidString(updatePlaylistRequest.getCustomerId()) != false)) {
+        if (MusicPlaylistServiceUtils.isValidString(updatePlaylistRequest.getName()) == false &&
+                !(!MusicPlaylistServiceUtils.isValidString(updatePlaylistRequest.getCustomerId()) != false)) {
             throw new InvalidAttributeValueException("playlist name or customer ID has invalid characters");
         }
 
