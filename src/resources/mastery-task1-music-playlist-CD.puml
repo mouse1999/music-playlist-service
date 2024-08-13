@@ -79,9 +79,11 @@ class AlbumTrackNotFoundException {
 class InvalidAttributeValueException{
 
 }
+class InvalidAttributeChangeException{}
 class PlaylistNotFoundException{
 }
 class RuntimeException{}
+class InvalidAttributeException
 
 AddSongToPlaylistActivity o-- PlaylistDao
 AddSongToPlaylistActivity o-- AlbumTrackDao
@@ -98,12 +100,13 @@ GetPlaylistSongsActivity o- PlaylistDao
 UpdatePlaylistActivity o-- PlaylistDao
 AlbumTrackDao o-- DynamoDBMapper
 AlbumTrackNotFoundException -|> RuntimeException
-InvalidAttributeValueException --|> RuntimeException
+InvalidAttributeValueException --|> InvalidAttributeException
 PlaylistNotFoundException --|> RuntimeException
 PlaylistDao *- PlaylistNotFoundException
 AlbumTrackDao *- AlbumTrackNotFoundException
 
 Playlist o- AlbumTrack
-
+InvalidAttributeChangeException --|> InvalidAttributeException
+InvalidAttributeException --|> RuntimeException
 
 @enduml
