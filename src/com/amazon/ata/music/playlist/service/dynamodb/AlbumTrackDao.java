@@ -11,6 +11,10 @@ import javax.inject.Inject;
  */
 public class AlbumTrackDao {
     private final DynamoDBMapper dynamoDbMapper;
+    private String asin;
+    private Integer trackNumber;
+    private String albumName;
+    private String songTitle;
 
     /**
      * Instantiates an AlbumTrackDao object.
@@ -21,4 +25,13 @@ public class AlbumTrackDao {
     public AlbumTrackDao(DynamoDBMapper dynamoDbMapper) {
         this.dynamoDbMapper = dynamoDbMapper;
     }
+
+    public AlbumTrack getAlbumTrack(String asin, Integer trackNumber) {
+
+        return dynamoDbMapper.load(AlbumTrack.class,asin, trackNumber);
+
+    }
+
+
+
 }
